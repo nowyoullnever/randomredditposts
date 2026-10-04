@@ -1,40 +1,30 @@
+import { isValidPost, pickPost } from "./picker.js";
+
 const button = document.querySelector("#lucky-button");
 const sfw = document.querySelector("#sfw");
-const apiBase = String(window.RANDOM_REDDIT_API_BASE_URL || "").replace(/\/$/, "");
-let lastId = null;
-
-function randomEndpoint() {
-  if (!apiBase) return null;
-  const endpoint = new URL(`${apiBase}/random`);
-  endpoint.searchParams.set("sfw", sfw.checked ? "1" : "0");
-  if (lastId) endpoint.searchParams.set("exclude", lastId);
-  return endpoint;
-}
+let previousId = null;
+const posts = fetch("./data/posts.json", { cache: "force-cache" })
+  .then((response) => response.ok ? response.json() : Promise.reject(new Error("Catalog unavailable")))
+  .then((catalog) => Array.isArray(catalog) ? catalog.filter(isValidPost) : []);
 
 button.addEventListener("click", async () => {
-  const endpoint = randomEndpoint();
-  if (!endpoint || button.disabled) return;
-
-  // Open synchronously to preserve the browser's user-gesture popup permission.
+  if (button.disabled) return;
+  // This must happen inside the click event, before awaiting the local catalog.
   const target = window.open("about:blank", "_blank");
   if (target) target.opener = null;
   button.disabled = true;
-  const originalText = button.textContent;
+  const label = button.textContent;
   button.textContent = "Finding…";
   try {
-    const response = await fetch(endpoint, { headers: { Accept: "application/json" } });
-    if (!response.ok) throw new Error(`API request failed (${response.status})`);
-    const result = await response.json();
-    if (!result || typeof result.permalink !== "string" || !/^\/r\//.test(result.permalink)) throw new Error("Invalid API result");
-    lastId = result.id;
-    const url = new URL(result.permalink, "https://www.reddit.com").href;
-    if (target) target.location.replace(url);
-    else window.open(url, "_blank", "noopener");
+    const post = pickPost(await posts, sfw.checked, previousId);
+    if (!post) throw new Error("No eligible verified post");
+    previousId = post.id;
+    target?.location.replace(new URL(post.permalink, "https://www.reddit.com").href);
   } catch {
-    // Never navigate a blank tab to an unverified URL.
+    // Catalog and link failures never navigate a new tab to a guessed URL.
     if (target && !target.closed) target.close();
   } finally {
     button.disabled = false;
-    button.textContent = originalText;
+    button.textContent = label;
   }
 });
