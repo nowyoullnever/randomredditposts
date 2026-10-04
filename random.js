@@ -45,7 +45,8 @@ export function createSessionId(getBytes = (length) => crypto.getRandomValues(ne
 export function markedPermalinkFor(id, sessionId) {
   if (!/^[a-f0-9]{32}$/i.test(sessionId)) throw new TypeError("Invalid session ID");
   const url = new URL(permalinkFor(id));
-  url.searchParams.set("rrp", "1");
-  url.searchParams.set("rrps", sessionId.toLowerCase());
+  // Reddit can canonicalize away query strings. A fragment is never sent to
+  // Reddit and survives that canonicalization in the same browser tab.
+  url.hash = new URLSearchParams({ rrp: "1", rrps: sessionId.toLowerCase() }).toString();
   return url.href;
 }

@@ -31,9 +31,9 @@
     return;
   }
 
-  const query = new URLSearchParams(location.search);
-  const sessionId = query.get("rrps") || "";
-  if (query.get("rrp") !== "1" || !/^[a-f0-9]{32}$/i.test(sessionId)) return;
+  const marker = new URLSearchParams(location.hash.slice(1));
+  const sessionId = marker.get("rrps") || "";
+  if (marker.get("rrp") !== "1" || !/^[a-f0-9]{32}$/i.test(sessionId)) return;
 
   const stateKey = `randomreddit:session:${sessionId.toLowerCase()}`;
   const statusKey = `${stateKey}:status`;
@@ -108,8 +108,7 @@
     sessionStorage.setItem(stateKey, String(attempts + 1));
     setStatus(`Retrying unavailable post (${attempts + 1}/${MAX_ATTEMPTS}).`);
     const next = new URL(`https://www.reddit.com/comments/${randomId()}`);
-    next.searchParams.set("rrp", "1");
-    next.searchParams.set("rrps", sessionId.toLowerCase());
+    next.hash = new URLSearchParams({ rrp: "1", rrps: sessionId.toLowerCase() }).toString();
     setTimeout(() => location.replace(next.href), RETRY_DELAY_MS);
   }
 

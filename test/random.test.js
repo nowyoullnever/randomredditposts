@@ -23,11 +23,12 @@ test("drawPostId redraws an immediately repeated ID when possible", () => {
   assert.equal(drawPostId("1", () => values.shift()), "2");
 });
 
-test("marked permalink contains only the generated session identifier", () => {
+test("marked permalink stores the generated session identifier in its fragment", () => {
   const session = createSessionId(() => new Uint8Array(16).fill(10));
   assert.equal(session, "0a".repeat(16));
   const url = new URL(markedPermalinkFor("abc", session));
   assert.equal(url.pathname, "/comments/abc");
-  assert.equal(url.searchParams.get("rrp"), "1");
-  assert.equal(url.searchParams.get("rrps"), session);
+  const marker = new URLSearchParams(url.hash.slice(1));
+  assert.equal(marker.get("rrp"), "1");
+  assert.equal(marker.get("rrps"), session);
 });

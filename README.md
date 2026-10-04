@@ -15,11 +15,11 @@ GitHub Pages에서 동작하는 최소 Reddit ID 난수 생성기다. 버튼을 
 [`randomreddit.user.js`](https://nowyoullnever.github.io/randomredditposts/randomreddit.user.js)는 다음 두 페이지에서만 실행된다.
 
 - GitHub Pages 사이트: 설치 여부를 비민감 커스텀 이벤트로 표시한다. Reddit 쿠키·로그인 정보·탐색 기록을 전달하지 않는다.
-- `rrp=1` 및 탭별 `rrps` 세션 식별자가 있는 Reddit 게시물 URL: 실제 DOM을 관찰한다.
+- URL fragment의 `rrp=1` 및 탭별 `rrps` 세션 식별자가 있는 Reddit 게시물 URL: 실제 DOM을 관찰한다. Reddit 리디렉션이 쿼리를 제거할 수 있으므로 식별자는 fragment에 둔다.
 
 Userscript는 게시물 컨테이너가 보이면 종료한다. 삭제 마커 또는 명시적인 오류 DOM이 있을 때만 같은 탭에서 새 ID로 이동한다. 로그인, 네트워크 오류, 챌린지, 429/접근 차단, 계속 로딩, 예상하지 못한 DOM은 잘못된 ID로 단정하지 않고 중단한다. 재시도는 최대 15회, 1.8초 간격이며 새 탭을 추가로 열지 않는다.
 
-일반 Reddit 탐색·검색·수동 방문에는 `rrp=1`과 올바른 세션 ID가 없으므로 동작하지 않는다.
+일반 Reddit 탐색·검색·수동 방문에는 fragment의 `rrp=1`과 올바른 세션 ID가 없으므로 동작하지 않는다.
 
 ## 설치
 
