@@ -37,3 +37,15 @@ export function permalinkFor(id) {
   if (!/^[0-9a-z]+$/i.test(id)) throw new TypeError("Invalid base-36 ID");
   return `https://www.reddit.com/comments/${id.toLowerCase()}`;
 }
+
+export function createSessionId(getBytes = (length) => crypto.getRandomValues(new Uint8Array(length))) {
+  return Array.from(getBytes(16), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export function markedPermalinkFor(id, sessionId) {
+  if (!/^[a-f0-9]{32}$/i.test(sessionId)) throw new TypeError("Invalid session ID");
+  const url = new URL(permalinkFor(id));
+  url.searchParams.set("rrp", "1");
+  url.searchParams.set("rrps", sessionId.toLowerCase());
+  return url.href;
+}

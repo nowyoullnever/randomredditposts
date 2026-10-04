@@ -15,6 +15,14 @@
       </svg>
       <button id="lucky-button" type="button">I'm Feeling Lucky</button>
     </main>
+    <aside class="validation-note" aria-live="polite">
+      <span id="validation-status">Automatic validation requires Tampermonkey.</span>
+      <nav aria-label="Automatic validation installation">
+        <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Install Tampermonkey</a>
+        <span aria-hidden="true"> · </span>
+        <a href="./randomreddit.user.js">Install userscript</a>
+      </nav>
+    </aside>
     <script type="module" src="app.js"></script>
   </body>
 </html>

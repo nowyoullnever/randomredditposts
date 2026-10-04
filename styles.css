@@ -7,3 +7,7 @@ button { appearance: none; border: 1px solid #c7c7c7; border-radius: 4px; backgr
 button:hover:not(:disabled) { border-color: #a8a8a8; box-shadow: 0 1px 1px rgba(0, 0, 0, .08); }
 button:focus-visible, input:focus-visible { outline: 2px solid #1a73e8; outline-offset: 2px; }
 button:disabled { cursor: wait; color: #777; }
+.validation-note { position: fixed; inset: auto 0 14px; display: grid; justify-items: center; gap: 2px; color: #9a9a9a; font-size: 10px; line-height: 14px; text-align: center; }
+.validation-note a { color: #888; text-decoration: none; }
+.validation-note a:hover { text-decoration: underline; }
+.validation-note a:focus-visible { outline: 2px solid #1a73e8; outline-offset: 2px; }
