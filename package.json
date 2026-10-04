@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --test",
-    "verify:catalog": "node scripts/verify-catalog.mjs"
+    "test": "node --test"
   }
 }
