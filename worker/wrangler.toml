@@ -1,0 +1,10 @@
+name = "random-reddit-posts-api"
+main = "src/worker.js"
+compatibility_date = "2026-10-04"
+
+# Set with `wrangler secret put` (never commit them):
+# REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT
+# Optional: KV binding makes the short-lived candidate cache shared across isolates.
+[[kv_namespaces]]
+binding = "POST_CACHE"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
